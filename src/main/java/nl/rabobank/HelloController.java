@@ -20,11 +20,11 @@ public class HelloController {
 
     @PostMapping(path = "/person", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public PersonDto createPerson(@RequestBody PersonDto person) {
+    public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto person, HttpServletResponse response) {
 
         singleton = person;
 
-        return person;
+        return new ResponseEntity<>(person, HttpStatus.CREATED);
 
     }
 

@@ -39,7 +39,7 @@ public class HelloControllerIT {
                         " \"dateOfBirth\" : \"20/03/1984\" ," +
                         " \"address\" : \"17 Kew Drive, Borrowdale, Harare, 2345WP\" " +
                         "}"))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
 
     }
 
@@ -53,7 +53,7 @@ public class HelloControllerIT {
                         " \"dateOfBirth\" : \"20/03/1984\" ," +
                         " \"address\" : \"17 Kew Drive, Borrowdale, Harare, 2345WP\" " +
                         "}"))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
 
         mvc.perform(MockMvcRequestBuilders.get("/person"))
                 .andExpect(status().isOk())
