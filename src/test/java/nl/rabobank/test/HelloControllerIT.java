@@ -86,7 +86,7 @@ public class HelloControllerIT {
     }
 
     @Test
-    void modifyPerson() throws Exception {
+    void canModifyAddress() throws Exception {
 
         PersonJsonBuilder tracy = aPerson()
                 .withFirstName("Tracy")
@@ -107,10 +107,68 @@ public class HelloControllerIT {
         mvc.perform(get(personById(id)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("firstName", is("Tracy")))
-                .andExpect(jsonPath("lastName", is("Lane")))
-                .andExpect(jsonPath("dateOfBirth", is("20/03/1984")))
                 .andExpect(jsonPath("address", is("18 Fisher Avenue, Borrowdale, Harare, 2345WP")));
+
+    }
+
+    @Test
+    void cannotModifyFirstName() throws Exception {
+
+        PersonJsonBuilder tracy = aPerson()
+                .withFirstName("Tracy")
+                .withLastName("Lane")
+                .withDateOfBirth("20/03/1984")
+                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+
+        String id = client.createPerson(tracy);
+
+        //change firstName
+        tracy.withFirstName("Hilda");
+
+        mvc.perform(put(personById(id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                .content(tracy.toJson()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    @Test
+    void cannotModifyLastName() throws Exception {
+
+        PersonJsonBuilder tracy = aPerson()
+                .withFirstName("Tracy")
+                .withLastName("Lane")
+                .withDateOfBirth("20/03/1984")
+                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+
+        String id = client.createPerson(tracy);
+
+        //change firstName
+        tracy.withLastName("Schwartz");
+
+        mvc.perform(put(personById(id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                .content(tracy.toJson()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    @Test
+    void cannotModifyDateOfBirth() throws Exception {
+
+        PersonJsonBuilder tracy = aPerson()
+                .withFirstName("Tracy")
+                .withLastName("Lane")
+                .withDateOfBirth("20/03/1984")
+                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+
+        String id = client.createPerson(tracy);
+
+        //change firstName
+        tracy.withDateOfBirth("21/11/1991");
+
+        mvc.perform(put(personById(id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                .content(tracy.toJson()))
+                .andExpect(status().isForbidden());
+
 
     }
 

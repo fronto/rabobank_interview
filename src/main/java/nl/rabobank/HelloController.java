@@ -63,8 +63,25 @@ public class HelloController {
         //TODO what non-existent entities
 
         Integer idNumber = Integer.valueOf(id);
-        singleton.put(idNumber, personDto);
-        return new ResponseEntity<>(singleton.get(idNumber), HttpStatus.OK);
+        if(singleton.containsKey(idNumber)) {
+
+
+            PersonDto originial = singleton.get(idNumber);
+            if(!originial.getFirstName().equals(personDto.getFirstName())) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+            }
+            if(!originial.getLastName().equals(personDto.getLastName())) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+            }
+            if(!originial.getDateOfBirth().equals(personDto.getDateOfBirth())) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+            }
+
+            singleton.put(idNumber, personDto);
+            return new ResponseEntity<>(singleton.get(idNumber), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/person/{id}/")
