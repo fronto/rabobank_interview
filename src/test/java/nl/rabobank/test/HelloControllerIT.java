@@ -88,10 +88,7 @@ public class HelloControllerIT {
     @Test
     void canModifyAddress() throws Exception {
 
-        PersonJsonBuilder tracy = aPerson()
-                .withFirstName("Tracy")
-                .withLastName("Lane")
-                .withDateOfBirth("20/03/1984")
+        PersonJsonBuilder tracy = tracy()
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
 
         String id = client.createPerson(tracy);
@@ -114,11 +111,8 @@ public class HelloControllerIT {
     @Test
     void cannotModifyFirstName() throws Exception {
 
-        PersonJsonBuilder tracy = aPerson()
-                .withFirstName("Tracy")
-                .withLastName("Lane")
-                .withDateOfBirth("20/03/1984")
-                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+        PersonJsonBuilder tracy = tracy()
+                .withFirstName("Tracy");
 
         String id = client.createPerson(tracy);
 
@@ -134,11 +128,8 @@ public class HelloControllerIT {
     @Test
     void cannotModifyLastName() throws Exception {
 
-        PersonJsonBuilder tracy = aPerson()
-                .withFirstName("Tracy")
-                .withLastName("Lane")
-                .withDateOfBirth("20/03/1984")
-                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+        PersonJsonBuilder tracy = tracy()
+                .withLastName("Lane");
 
         String id = client.createPerson(tracy);
 
@@ -154,11 +145,8 @@ public class HelloControllerIT {
     @Test
     void cannotModifyDateOfBirth() throws Exception {
 
-        PersonJsonBuilder tracy = aPerson()
-                .withFirstName("Tracy")
-                .withLastName("Lane")
-                .withDateOfBirth("20/03/1984")
-                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+        PersonJsonBuilder tracy = tracy()
+                .withDateOfBirth("20/03/1984");
 
         String id = client.createPerson(tracy);
 
@@ -175,11 +163,7 @@ public class HelloControllerIT {
     @Test
     void deletePerson() throws Exception {
 
-        PersonJsonBuilder tracy = aPerson()
-                .withFirstName("Tracy")
-                .withLastName("Lane")
-                .withDateOfBirth("20/03/1984")
-                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+        PersonJsonBuilder tracy = tracy();
 
         String id = client.createPerson(tracy);
 
@@ -193,7 +177,14 @@ public class HelloControllerIT {
         mvc.perform(get(personById(id)))
                 .andExpect(status().isNotFound());
 
+    }
 
+    private PersonJsonBuilder tracy() {
+        return aPerson()
+                .withFirstName("Tracy")
+                .withLastName("Lane")
+                .withDateOfBirth("20/03/1984")
+                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
     }
 
     private String personById(String id) {
