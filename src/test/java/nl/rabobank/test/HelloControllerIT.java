@@ -44,11 +44,14 @@ public class HelloControllerIT {
                 .withDateOfBirth("20/03/1984")
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
 
-
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .content(tracy.toJson()))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("id", notNullValue())).andReturn();
+                .andExpect(jsonPath("id", notNullValue()))
+                .andExpect(jsonPath("firstName", is("Tracy")))
+                .andExpect(jsonPath("lastName", is("Lane")))
+                .andExpect(jsonPath("dateOfBirth", is("20/03/1984")))
+                .andExpect(jsonPath("address", is("17 Kew Drive, Borrowdale, Harare, 2345WP")));
 
     }
 
@@ -83,8 +86,6 @@ public class HelloControllerIT {
                 .andExpect(jsonPath("lastName", is("Lane")))
                 .andExpect(jsonPath("dateOfBirth", is("20/03/1984")))
                 .andExpect(jsonPath("address", is("17 Kew Drive, Borrowdale, Harare, 2345WP")));
-
-
 
     }
 
