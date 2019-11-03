@@ -13,13 +13,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
@@ -39,7 +39,7 @@ public class HelloControllerIT {
 
     @Test
     public void getHello() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("Greetings from Spring Boot!\n")));
     }
@@ -47,13 +47,13 @@ public class HelloControllerIT {
     @Test
     public void addPerson() throws Exception {
 
-        PersonJsonBuilder tracy = person()
+        PersonJsonBuilder tracy = aPerson()
                 .withFirstName("Tracy")
                 .withLastName("Lane")
                 .withDateOfBirth("20/03/1984")
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
 
-        mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .content(tracy.toJson()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("id", notNullValue()))
@@ -67,7 +67,7 @@ public class HelloControllerIT {
     @Test
     void retrieveAPerson() throws Exception {
 
-        PersonJsonBuilder tracy = person()
+        PersonJsonBuilder tracy = aPerson()
                 .withFirstName("Tracy")
                 .withLastName("Lane")
                 .withDateOfBirth("20/03/1984")
@@ -75,7 +75,7 @@ public class HelloControllerIT {
 
         String id = client.createPerson(tracy);
 
-        mvc.perform(MockMvcRequestBuilders.get(String.format("/person/%s/", id)))
+        mvc.perform(get(personById(id)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("firstName", is("Tracy")))
@@ -88,7 +88,7 @@ public class HelloControllerIT {
     @Test
     void modifyPerson() throws Exception {
 
-        PersonJsonBuilder tracy = person()
+        PersonJsonBuilder tracy = aPerson()
                 .withFirstName("Tracy")
                 .withLastName("Lane")
                 .withDateOfBirth("20/03/1984")
@@ -100,11 +100,11 @@ public class HelloControllerIT {
         //change address
         tracy.withAddress("18 Fisher Avenue, Borrowdale, Harare, 2345WP");
 
-        mvc.perform(MockMvcRequestBuilders.put(String.format("/person/%s/", id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put(personById(id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .content(tracy.toJson()))
                 .andExpect(status().isOk());
 
-        mvc.perform(MockMvcRequestBuilders.get(String.format("/person/%s/", id)))
+        mvc.perform(get(personById(id)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("firstName", is("Tracy")))
@@ -117,7 +117,7 @@ public class HelloControllerIT {
     @Test
     void deletePerson() throws Exception {
 
-        PersonJsonBuilder tracy = person()
+        PersonJsonBuilder tracy = aPerson()
                 .withFirstName("Tracy")
                 .withLastName("Lane")
                 .withDateOfBirth("20/03/1984")
@@ -126,16 +126,20 @@ public class HelloControllerIT {
         String id = client.createPerson(tracy);
 
         //confirm exists
-        mvc.perform(MockMvcRequestBuilders.get(String.format("/person/%s/", id)))
+        mvc.perform(get(personById(id)))
                 .andExpect(status().isOk());
 
-        mvc.perform(MockMvcRequestBuilders.delete(String.format("/person/%s/", id))).andExpect(status().isNoContent());
+        mvc.perform(delete(personById(id))).andExpect(status().isNoContent());
 
         //confirm does not exist
-        mvc.perform(MockMvcRequestBuilders.get(String.format("/person/%s/", id)))
+        mvc.perform(get(personById(id)))
                 .andExpect(status().isNotFound());
 
 
+    }
+
+    private String personById(String id) {
+        return String.format("/person/%s/", id);
     }
 
     @AllArgsConstructor
@@ -145,7 +149,7 @@ public class HelloControllerIT {
 
         String createPerson(PersonJsonBuilder person) {
             try {
-                MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                MvcResult result = mockMvc.perform(post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                         .content(person.toJson()))
                         .andExpect(status().isCreated()).andReturn();
                 return obtainId(result);
@@ -165,7 +169,7 @@ public class HelloControllerIT {
 
     }
 
-    private PersonJsonBuilder person() {
+    private static PersonJsonBuilder aPerson() {
         return new PersonJsonBuilder();
     }
 
