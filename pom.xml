@@ -19,6 +19,7 @@
 
     <modules>
         <module>person-data-domain</module>
+        <module>person-data-persistence</module>
         <module>person-data-web</module>
     </modules>
 
