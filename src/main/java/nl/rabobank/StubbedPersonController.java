@@ -11,7 +11,8 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
-public class HelloController {
+@RequestMapping("/stub")
+public class StubbedPersonController {
 
     static Random random = new Random();
 

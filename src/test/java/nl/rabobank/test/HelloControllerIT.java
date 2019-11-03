@@ -32,7 +32,7 @@ public class HelloControllerIT {
     //TODO remove this test
     @Test
     public void getHello() throws Exception {
-        mvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/stub/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("Greetings from Spring Boot!\n")));
     }
@@ -46,7 +46,7 @@ public class HelloControllerIT {
                 .withDateOfBirth("20/03/1984")
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
 
-        mvc.perform(post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/stub/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .content(tracy.toJson()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("id", notNullValue()))
@@ -180,7 +180,7 @@ public class HelloControllerIT {
     }
 
     private String personById(String id) {
-        return String.format("/person/%s/", id);
+        return String.format("/stub/person/%s/", id);
     }
 
 
