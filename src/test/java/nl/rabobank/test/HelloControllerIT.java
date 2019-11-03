@@ -134,6 +134,11 @@ public class HelloControllerIT {
 
         mvc.perform(MockMvcRequestBuilders.delete(String.format("/person/%s/", id))).andExpect(status().isNoContent());
 
+        //confirm does not exist
+        mvc.perform(MockMvcRequestBuilders.get(String.format("/person/%s/", id)))
+                .andExpect(status().isNotFound());
+
+
     }
 
 }

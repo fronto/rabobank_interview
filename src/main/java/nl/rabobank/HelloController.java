@@ -49,8 +49,12 @@ public class HelloController {
     public ResponseEntity<PersonDto> getPerson(@PathVariable String id) {
         //TODO what about non-existent entities
         Integer idNumber = Integer.valueOf(id);
-        PersonDto personDto = singleton.get(idNumber);
-        return new ResponseEntity<>(personDto, HttpStatus.OK);
+        if (singleton.containsKey(idNumber)) {
+            PersonDto personDto = singleton.get(idNumber);
+            return new ResponseEntity<>(personDto, HttpStatus.OK);
+
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/person/{id}/")
