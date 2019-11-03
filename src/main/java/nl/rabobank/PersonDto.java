@@ -1,8 +1,10 @@
 package nl.rabobank;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Getter
@@ -12,7 +14,8 @@ public class PersonDto {
     private Optional<String> id;
     private String firstName;
     private String lastName;
-    private String dateOfBirth;//TODO change to Date type
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dateOfBirth;
     private String address;
 
 }
