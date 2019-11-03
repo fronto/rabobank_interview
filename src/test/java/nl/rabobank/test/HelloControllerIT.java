@@ -2,6 +2,7 @@ package nl.rabobank.test;
 
 import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,15 +56,6 @@ public class HelloControllerIT {
 
     }
 
-
-    private String obtainId(MvcResult result) {
-        try {
-            return JsonPath.parse(result.getResponse().getContentAsString()).read("id");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Test
     void retrieveAPerson() throws Exception {
 
@@ -73,11 +65,8 @@ public class HelloControllerIT {
                 .withDateOfBirth("20/03/1984")
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
 
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-                .content(tracy.toJson()))
-                .andExpect(status().isCreated()).andReturn();
-
-        String id = obtainId(result);
+        PersonServiceRestClient client = new PersonServiceRestClient(mvc);
+        String id = client.createPerson(tracy);
 
         mvc.perform(MockMvcRequestBuilders.get(String.format("/person/%s/", id)))
                 .andExpect(status().isOk())
@@ -98,20 +87,15 @@ public class HelloControllerIT {
                 .withDateOfBirth("20/03/1984")
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
 
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-                .content(tracy.toJson()))
-                .andExpect(status().isCreated()).andReturn();
+        PersonServiceRestClient client = new PersonServiceRestClient(mvc);
+        String id = client.createPerson(tracy);
 
-        String id = obtainId(result);
-
+        //TODO restrict change to address change
         //change address
+        tracy.withAddress("18 Fisher Avenue, Borrowdale, Harare, 2345WP");
+
         mvc.perform(MockMvcRequestBuilders.put(String.format("/person/%s/", id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-                .content("{ " +
-                        " \"firstName\" : \"Tracy\" ," +
-                        " \"lastName\" : \"Lane\" ," +
-                        " \"dateOfBirth\" : \"20/03/1984\" ," +
-                        " \"address\" : \"18 Fisher Avenue, Borrowdale, Harare, 2345WP\" " +
-                        "}"))
+                .content(tracy.toJson()))
                 .andExpect(status().isOk());
 
         mvc.perform(MockMvcRequestBuilders.get(String.format("/person/%s/", id)))
@@ -133,11 +117,9 @@ public class HelloControllerIT {
                 .withDateOfBirth("20/03/1984")
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
 
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-                .content(tracy.toJson()))
-                .andExpect(status().isCreated()).andReturn();
 
-        String id = obtainId(result);
+        PersonServiceRestClient client = new PersonServiceRestClient(mvc);
+        String id = client.createPerson(tracy);
 
         //confirm exists
         mvc.perform(MockMvcRequestBuilders.get(String.format("/person/%s/", id)))
@@ -149,6 +131,33 @@ public class HelloControllerIT {
         mvc.perform(MockMvcRequestBuilders.get(String.format("/person/%s/", id)))
                 .andExpect(status().isNotFound());
 
+
+    }
+
+    @AllArgsConstructor
+    static class PersonServiceRestClient {
+
+        final MockMvc mockMvc;
+
+        String createPerson(PersonJsonBuilder person) {
+            try {
+                MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                        .content(person.toJson()))
+                        .andExpect(status().isCreated()).andReturn();
+                return obtainId(result);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
+        private String obtainId(MvcResult result) {
+            try {
+                return JsonPath.parse(result.getResponse().getContentAsString()).read("id");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
     }
 
