@@ -1,5 +1,6 @@
 package nl.rabobank.test;
 
+import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -35,17 +38,20 @@ public class HelloControllerIT {
     @Test
     public void addPerson() throws Exception {
 
+        PersonJsonBuilder tracy = person()
+                .withFirstName("Tracy")
+                .withLastName("Lane")
+                .withDateOfBirth("20/03/1984")
+                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+
+
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-                .content("{" +
-                        " \"firstName\" : \"Tracy\" ," +
-                        " \"lastName\" : \"Lane\" ," +
-                        " \"dateOfBirth\" : \"20/03/1984\" ," +
-                        " \"address\" : \"17 Kew Drive, Borrowdale, Harare, 2345WP\" " +
-                        "}"))
+                .content(tracy.toJson()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("id", notNullValue())).andReturn();
 
     }
+
 
     private String obtainId(MvcResult result) {
         try {
@@ -58,13 +64,14 @@ public class HelloControllerIT {
     @Test
     void retrieveAPerson() throws Exception {
 
+        PersonJsonBuilder tracy = person()
+                .withFirstName("Tracy")
+                .withLastName("Lane")
+                .withDateOfBirth("20/03/1984")
+                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-                .content("{ " +
-                        " \"firstName\" : \"Tracy\" ," +
-                        " \"lastName\" : \"Lane\" ," +
-                        " \"dateOfBirth\" : \"20/03/1984\" ," +
-                        " \"address\" : \"17 Kew Drive, Borrowdale, Harare, 2345WP\" " +
-                        "}"))
+                .content(tracy.toJson()))
                 .andExpect(status().isCreated()).andReturn();
 
         String id = obtainId(result);
@@ -84,13 +91,14 @@ public class HelloControllerIT {
     @Test
     void modifyPerson() throws Exception {
 
+        PersonJsonBuilder tracy = person()
+                .withFirstName("Tracy")
+                .withLastName("Lane")
+                .withDateOfBirth("20/03/1984")
+                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-                .content("{ " +
-                        " \"firstName\" : \"Tracy\" ," +
-                        " \"lastName\" : \"Lane\" ," +
-                        " \"dateOfBirth\" : \"20/03/1984\" ," +
-                        " \"address\" : \"17 Kew Drive, Borrowdale, Harare, 2345WP\" " +
-                        "}"))
+                .content(tracy.toJson()))
                 .andExpect(status().isCreated()).andReturn();
 
         String id = obtainId(result);
@@ -117,13 +125,15 @@ public class HelloControllerIT {
 
     @Test
     void deletePerson() throws Exception {
+
+        PersonJsonBuilder tracy = person()
+                .withFirstName("Tracy")
+                .withLastName("Lane")
+                .withDateOfBirth("20/03/1984")
+                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-                .content("{ " +
-                        " \"firstName\" : \"Tracy\" ," +
-                        " \"lastName\" : \"Lane\" ," +
-                        " \"dateOfBirth\" : \"20/03/1984\" ," +
-                        " \"address\" : \"17 Kew Drive, Borrowdale, Harare, 2345WP\" " +
-                        "}"))
+                .content(tracy.toJson()))
                 .andExpect(status().isCreated()).andReturn();
 
         String id = obtainId(result);
@@ -140,5 +150,42 @@ public class HelloControllerIT {
 
 
     }
+
+    private PersonJsonBuilder person() {
+        return new PersonJsonBuilder();
+    }
+
+    static class PersonJsonBuilder {
+
+        final private Map<String, String> fields = new HashMap<>();
+
+        PersonJsonBuilder withFirstName(String firstName) {
+            fields.put("firstName", firstName);
+            return this;
+        }
+
+        PersonJsonBuilder withLastName(String lastName) {
+            fields.put("lastName", lastName);
+            return this;
+        }
+
+        PersonJsonBuilder withDateOfBirth(String dateOfBirth) {
+            fields.put("dateOfBirth", dateOfBirth);
+            return this;
+        }
+
+        PersonJsonBuilder withAddress(String address) {
+            fields.put("address", address);
+            return this;
+        }
+
+        String toJson() {
+            Gson gson = new Gson();
+            return gson.toJson(fields);
+        }
+
+    }
+
+
 
 }
