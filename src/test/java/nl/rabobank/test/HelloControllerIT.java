@@ -37,6 +37,7 @@ public class HelloControllerIT {
         client = new PersonServiceRestClient(mvc);
     }
 
+    //TODO remove this test
     @Test
     public void getHello() throws Exception {
         mvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
@@ -93,7 +94,6 @@ public class HelloControllerIT {
 
         String id = client.createPerson(tracy);
 
-        //TODO restrict change to address change
         //change address
         tracy.withAddress("18 Fisher Avenue, Borrowdale, Harare, 2345WP");
 
@@ -133,7 +133,7 @@ public class HelloControllerIT {
 
         String id = client.createPerson(tracy);
 
-        //change firstName
+        //change lastName
         tracy.withLastName("Schwartz");
 
         mvc.perform(put(personById(id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
@@ -150,7 +150,7 @@ public class HelloControllerIT {
 
         String id = client.createPerson(tracy);
 
-        //change firstName
+        //change dateOfBirth
         tracy.withDateOfBirth("21/11/1991");
 
         mvc.perform(put(personById(id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
