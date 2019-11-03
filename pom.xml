@@ -16,8 +16,6 @@
     </parent>
 
     <name>interview</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
 
     <modules>
         <module>person-data-domain</module>
@@ -75,14 +73,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
-            <plugins>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>
