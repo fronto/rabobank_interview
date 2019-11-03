@@ -3,6 +3,7 @@ package nl.rabobank.test;
 import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 import lombok.AllArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,13 @@ public class HelloControllerIT {
 
     @Autowired
     private MockMvc mvc;
+
+    private PersonServiceRestClient client;
+
+    @BeforeEach
+    void setUpClient() {
+        client = new PersonServiceRestClient(mvc);
+    }
 
     @Test
     public void getHello() throws Exception {
@@ -65,7 +73,6 @@ public class HelloControllerIT {
                 .withDateOfBirth("20/03/1984")
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
 
-        PersonServiceRestClient client = new PersonServiceRestClient(mvc);
         String id = client.createPerson(tracy);
 
         mvc.perform(MockMvcRequestBuilders.get(String.format("/person/%s/", id)))
@@ -87,7 +94,6 @@ public class HelloControllerIT {
                 .withDateOfBirth("20/03/1984")
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
 
-        PersonServiceRestClient client = new PersonServiceRestClient(mvc);
         String id = client.createPerson(tracy);
 
         //TODO restrict change to address change
@@ -117,8 +123,6 @@ public class HelloControllerIT {
                 .withDateOfBirth("20/03/1984")
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
 
-
-        PersonServiceRestClient client = new PersonServiceRestClient(mvc);
         String id = client.createPerson(tracy);
 
         //confirm exists
@@ -137,7 +141,7 @@ public class HelloControllerIT {
     @AllArgsConstructor
     static class PersonServiceRestClient {
 
-        final MockMvc mockMvc;
+        private final MockMvc mockMvc;
 
         String createPerson(PersonJsonBuilder person) {
             try {
@@ -167,7 +171,7 @@ public class HelloControllerIT {
 
     static class PersonJsonBuilder {
 
-        final private Map<String, String> fields = new HashMap<>();
+        private final Map<String, String> fields = new HashMap<>();
 
         PersonJsonBuilder withFirstName(String firstName) {
             fields.put("firstName", firstName);
