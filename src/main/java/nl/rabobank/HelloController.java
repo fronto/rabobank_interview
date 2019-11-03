@@ -33,6 +33,12 @@ public class HelloController {
         return singleton;
     }
 
+    @PutMapping("/person")
+    public ResponseEntity<PersonDto> modifyPerson(@RequestBody PersonDto personDto) {
+        //TODO what about null fields on DTO
+        singleton = personDto;
+        return new ResponseEntity<>(singleton, HttpStatus.OK);
+    }
 
     @DeleteMapping("/person")
     public ResponseEntity<Void> deletePerson() {

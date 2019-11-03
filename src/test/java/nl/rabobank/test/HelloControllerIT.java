@@ -66,6 +66,38 @@ public class HelloControllerIT {
     }
 
     @Test
+    void modifyPerson() throws Exception {
+
+        mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                .content("{ " +
+                        " \"firstName\" : \"Tracy\" ," +
+                        " \"lastName\" : \"Lane\" ," +
+                        " \"dateOfBirth\" : \"20/03/1984\" ," +
+                        " \"address\" : \"17 Kew Drive, Borrowdale, Harare, 2345WP\" " +
+                        "}"))
+                .andExpect(status().isCreated());
+
+        //change address
+        mvc.perform(MockMvcRequestBuilders.put("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                .content("{ " +
+                        " \"firstName\" : \"Tracy\" ," +
+                        " \"lastName\" : \"Lane\" ," +
+                        " \"dateOfBirth\" : \"20/03/1984\" ," +
+                        " \"address\" : \"18 Fisher Avenue, Borrowdale, Harare, 2345WP\" " +
+                        "}"))
+                .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders.get("/person"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("firstName", is("Tracy")))
+                .andExpect(jsonPath("lastName", is("Lane")))
+                .andExpect(jsonPath("dateOfBirth", is("20/03/1984")))
+                .andExpect(jsonPath("address", is("18 Fisher Avenue, Borrowdale, Harare, 2345WP")));
+
+    }
+
+    @Test
     void deletePerson() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .content("{ " +
