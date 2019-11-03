@@ -1,8 +1,5 @@
 package nl.rabobank.test;
 
-import com.google.gson.Gson;
-import com.jayway.jsonpath.JsonPath;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,11 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,7 +40,7 @@ public class HelloControllerIT {
     @Test
     public void addPerson() throws Exception {
 
-        PersonJsonBuilder tracy = aPerson()
+        PersonJsonBuilder tracy = PersonJsonBuilder.aPerson()
                 .withFirstName("Tracy")
                 .withLastName("Lane")
                 .withDateOfBirth("20/03/1984")
@@ -68,7 +60,7 @@ public class HelloControllerIT {
     @Test
     void retrieveAPerson() throws Exception {
 
-        PersonJsonBuilder tracy = aPerson()
+        PersonJsonBuilder tracy = PersonJsonBuilder.aPerson()
                 .withFirstName("Tracy")
                 .withLastName("Lane")
                 .withDateOfBirth("20/03/1984")
@@ -180,7 +172,7 @@ public class HelloControllerIT {
     }
 
     private PersonJsonBuilder tracy() {
-        return aPerson()
+        return PersonJsonBuilder.aPerson()
                 .withFirstName("Tracy")
                 .withLastName("Lane")
                 .withDateOfBirth("20/03/1984")
@@ -190,69 +182,6 @@ public class HelloControllerIT {
     private String personById(String id) {
         return String.format("/person/%s/", id);
     }
-
-    @AllArgsConstructor
-    static class PersonServiceRestClient {
-
-        private final MockMvc mockMvc;
-
-        String createPerson(PersonJsonBuilder person) {
-            try {
-                MvcResult result = mockMvc.perform(post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-                        .content(person.toJson()))
-                        .andExpect(status().isCreated()).andReturn();
-                return obtainId(result);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-
-        private String obtainId(MvcResult result) {
-            try {
-                return JsonPath.parse(result.getResponse().getContentAsString()).read("id");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    }
-
-    private static PersonJsonBuilder aPerson() {
-        return new PersonJsonBuilder();
-    }
-
-    static class PersonJsonBuilder {
-
-        private final Map<String, String> fields = new HashMap<>();
-
-        PersonJsonBuilder withFirstName(String firstName) {
-            fields.put("firstName", firstName);
-            return this;
-        }
-
-        PersonJsonBuilder withLastName(String lastName) {
-            fields.put("lastName", lastName);
-            return this;
-        }
-
-        PersonJsonBuilder withDateOfBirth(String dateOfBirth) {
-            fields.put("dateOfBirth", dateOfBirth);
-            return this;
-        }
-
-        PersonJsonBuilder withAddress(String address) {
-            fields.put("address", address);
-            return this;
-        }
-
-        String toJson() {
-            Gson gson = new Gson();
-            return gson.toJson(fields);
-        }
-
-    }
-
 
 
 }
