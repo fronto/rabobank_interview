@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 @RestController
 public class HelloController {
@@ -33,6 +32,16 @@ public class HelloController {
     public PersonDto getPerson() {
         return singleton;
     }
+
+
+    @DeleteMapping("/person")
+    public ResponseEntity<Void> deletePerson() {
+        singleton = null;
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
 
 
 }
