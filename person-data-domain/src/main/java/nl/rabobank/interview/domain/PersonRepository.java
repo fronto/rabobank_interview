@@ -1,6 +1,10 @@
 package nl.rabobank.interview.domain;
 
-public interface PersonRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
+
+@NoRepositoryBean
+public interface PersonRepository extends JpaRepository<Person, Long> {
 
     void savePerson(Person person);
 

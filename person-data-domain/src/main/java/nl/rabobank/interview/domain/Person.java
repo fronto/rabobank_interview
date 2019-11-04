@@ -22,6 +22,11 @@ public class Person {
     private LocalDate dateOfBirth;
     private String address;
 
+    @SuppressWarnings("unused")
+    private Person() {
+        //used by hibernate
+    }
+
     public Person(String firstName, String lastName, LocalDate dateOfBirth, String address) {
         this.firstName = firstName;
         this.lastName = lastName;
