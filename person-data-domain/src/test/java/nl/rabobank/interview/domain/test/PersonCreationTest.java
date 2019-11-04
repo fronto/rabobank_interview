@@ -3,12 +3,15 @@ package nl.rabobank.interview.domain.test;
 import nl.rabobank.interview.domain.Person;
 import nl.rabobank.interview.domain.PersonRepository;
 import nl.rabobank.interview.domain.PersonService;
+import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -40,6 +43,30 @@ public class PersonCreationTest {
 
         verify(personRepository).savePerson(PAUL_SCHWARTZ);
 
+    }
+
+    @Test
+    void creatingPersonEchosEntityWithId() {
+
+        PersonRepository personRepository = personRepository(populatesIdOnSaveOf(PAUL_SCHWARTZ));
+        PersonService personService = new PersonService(personRepository);
+
+        Person withId = personService.createNewPerson(PAUL_SCHWARTZ);
+
+        assertThat(withId).isEqualTo(PAUL_SCHWARTZ).has(anId());
+
+    }
+
+    Condition<Person> anId() {
+        return new Condition<>(person -> person.getId() != null,"id must not be null");
+    }
+
+     Behaviour<PersonRepository> populatesIdOnSaveOf(Person withoutId) {
+        Assertions.assertNull(withoutId.getId(), "Precondition violated: id field must be null");
+        return repository -> {
+            Person person = new Person(1234L, withoutId.getFirstName(), withoutId.getLastName(), withoutId.getDateOfBirth(), withoutId.getAddress());
+            when(repository.savePerson(withoutId)).thenReturn(person);
+        };
     }
 
     Behaviour<PersonRepository> without(final Person person) {

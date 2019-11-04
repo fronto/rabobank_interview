@@ -2,7 +2,7 @@ package nl.rabobank.interview.persistence.test;
 
 import nl.rabobank.interview.domain.Person;
 import nl.rabobank.interview.domain.PersonRepository;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -11,8 +11,8 @@ import org.springframework.test.context.ContextConfiguration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 //TODO what about @ExtendWith(SpringExtension.class)
@@ -42,6 +42,23 @@ public class PersonPersistenceTest {
         assertEquals(PAUL_SCHWARTZ, personRepository.findAll().get(0));
 
 
+    }
+
+    @Test
+    void persistingNewPersonEchosEntityWithIdPopulated() {
+
+        //pre-condition
+        assertNull(PAUL_SCHWARTZ.getId());
+
+        Person result = personRepository.savePerson(PAUL_SCHWARTZ);
+
+        assertThat(result).isEqualTo(PAUL_SCHWARTZ).has(anId());
+
+    }
+
+    //TODO duplication
+    Condition<Person> anId() {
+        return new Condition<>(person -> person.getId() != null,"id must not be null");
     }
 
     @Test

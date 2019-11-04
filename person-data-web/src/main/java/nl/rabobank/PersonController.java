@@ -1,11 +1,22 @@
 package nl.rabobank;
 
 import nl.rabobank.interview.domain.Person;
+import nl.rabobank.interview.domain.PersonRepository;
+import nl.rabobank.interview.domain.PersonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Access;
+import java.util.Optional;
+
+@RestController
 public class PersonController {
+
+    @Autowired
+    private PersonService personService;
 
     @PostMapping(path = "/person", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -13,7 +24,22 @@ public class PersonController {
 
         Person person = parseDomainObjectFromDto(personDto);
 
-        throw new UnsupportedOperationException("not implemented yet");
+        Person withId = personService.createNewPerson(person);
+
+        PersonDto toEcho = serializeToDto(withId);
+
+        return new ResponseEntity<>(toEcho, HttpStatus.CREATED);
+
+    }
+
+    private PersonDto serializeToDto(Person withId) {
+        PersonDto personDto = new PersonDto();
+        personDto.setId(Optional.of(withId.getId().toString()));
+        personDto.setFirstName(withId.getFirstName());
+        personDto.setLastName(withId.getLastName());
+        personDto.setDateOfBirth(withId.getDateOfBirth());
+        personDto.setAddress(withId.getAddress());
+        return personDto;
     }
 
     private static Person parseDomainObjectFromDto(PersonDto personDto) {

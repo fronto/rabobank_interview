@@ -6,7 +6,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    void savePerson(Person person);
+    Person savePerson(Person person);
 
     boolean hasPerson(String firstName, String lastName);
 }

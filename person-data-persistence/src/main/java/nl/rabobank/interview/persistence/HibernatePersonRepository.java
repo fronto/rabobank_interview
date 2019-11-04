@@ -22,8 +22,8 @@ public class HibernatePersonRepository extends SimpleJpaRepository<Person, Long>
         this.entityManager = entityManager;
     }
 
-    public void savePerson(Person person) {
-        super.save(person);//TODO consider inlining
+    public Person savePerson(Person person) {
+        return super.save(person);//TODO consider inlining
     }
 
     public boolean hasPerson(String firstName, String lastName) {

@@ -9,13 +9,14 @@ public class PersonService {
 
     private final PersonRepository personRepository;
 
-    public void createNewPerson(Person person) {
+    //TODO think about transaction demarcation
+    public Person createNewPerson(Person person) {
 
         if(personRepository.hasPerson(person.getFirstName(), person.getLastName())) {
             throw new IllegalStateException("Attempting to overwrite existing person");
         }
 
-        personRepository.savePerson(person);
+        return personRepository.savePerson(person);
 
     }
 
