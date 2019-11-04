@@ -1,18 +1,31 @@
 package nl.rabobank.interview.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalDate;
 
-@AllArgsConstructor
+@Entity
 public class Person {
 
-    @Getter
-    private final String firstName;
-    @Getter
-    private final String lastName;
-    private final LocalDate dateOfBirth;
-    private final String address;
+    @Id
+    @GeneratedValue
+    @SuppressWarnings("unused")
+    private Long id;
 
+    @Getter
+    private String firstName;
+    @Getter
+    private String lastName;
+    private LocalDate dateOfBirth;
+    private String address;
+
+    public Person(String firstName, String lastName, LocalDate dateOfBirth, String address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+    }
 }
