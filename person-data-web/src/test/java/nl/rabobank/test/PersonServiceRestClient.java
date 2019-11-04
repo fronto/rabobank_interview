@@ -18,7 +18,7 @@ class PersonServiceRestClient {
 
     String createPerson(PersonJsonBuilder person) {
         try {
-            MvcResult result = mockMvc.perform(post("/stub/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+            MvcResult result = mockMvc.perform(post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                     .content(person.toJson()))
                     .andExpect(status().isCreated()).andReturn();
             return obtainId(result);

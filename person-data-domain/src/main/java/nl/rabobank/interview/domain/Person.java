@@ -23,7 +23,7 @@ public class Person {
     private String address;
 
     @SuppressWarnings("unused")
-    private Person() {
+    Person() {
         //used by hibernate
     }
 

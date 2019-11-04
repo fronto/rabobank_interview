@@ -18,6 +18,9 @@ public class PersonController {
     @Autowired
     private PersonService personService;
 
+    @Autowired
+    private PersonRepository personRepository;
+
     @PostMapping(path = "/person", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto personDto) {
@@ -49,7 +52,11 @@ public class PersonController {
     @GetMapping("/person/{id}/")
     @ResponseBody
     public ResponseEntity<PersonDto> getPerson(@PathVariable String id) {
-        throw new UnsupportedOperationException("not implemented yet");
+
+        Person person = personRepository.getOne(Long.valueOf(id));
+        PersonDto dto = serializeToDto(person);
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PutMapping("/person/{id}/")
