@@ -81,7 +81,6 @@ public class PersonControllerIT {
 
     }
 
-    @Disabled
     @Test
     void canModifyAddress() throws Exception {
 
@@ -104,7 +103,6 @@ public class PersonControllerIT {
 
     }
 
-    @Disabled
     @Test
     void cannotModifyFirstName() throws Exception {
 
@@ -122,7 +120,6 @@ public class PersonControllerIT {
 
     }
 
-    @Disabled
     @Test
     void cannotModifyLastName() throws Exception {
 
@@ -140,7 +137,6 @@ public class PersonControllerIT {
 
     }
 
-    @Disabled
     @Test
     void cannotModifyDateOfBirth() throws Exception {
 

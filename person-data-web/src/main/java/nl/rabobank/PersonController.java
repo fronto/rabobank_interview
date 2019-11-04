@@ -49,6 +49,11 @@ public class PersonController {
         return new Person(personDto.getFirstName(), personDto.getLastName(), personDto.getDateOfBirth(), personDto.getAddress());
     }
 
+    private static Person parseDomainObjectFromDto(Long id, PersonDto personDto) {
+        return new Person(id, personDto.getFirstName(), personDto.getLastName(), personDto.getDateOfBirth(), personDto.getAddress());
+    }
+
+
     @GetMapping("/person/{id}/")
     @ResponseBody
     public ResponseEntity<PersonDto> getPerson(@PathVariable String id) {
@@ -61,7 +66,26 @@ public class PersonController {
 
     @PutMapping("/person/{id}/")
     public ResponseEntity<PersonDto> modifyPerson(@RequestBody PersonDto personDto, @PathVariable String id) {
-        throw new UnsupportedOperationException("not implemented yet");
+
+        Long idNumber = Long.valueOf(id);
+        Person original = personRepository.getOne(idNumber);
+        Person modified = parseDomainObjectFromDto(idNumber, personDto);
+
+        if(!original.getFirstName().equals(modified.getFirstName())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+        }
+        if(!original.getLastName().equals(modified.getLastName())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+        }
+        if(!original.getDateOfBirth().equals(modified.getDateOfBirth())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+        }
+
+        Person result = personRepository.save(modified);
+        PersonDto toReturn =  serializeToDto(result);
+
+        return new ResponseEntity<>(toReturn, HttpStatus.OK);
+
     }
 
     @DeleteMapping("/person/{id}/")
