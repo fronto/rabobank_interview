@@ -10,6 +10,12 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+/*
+ *
+ *  This class is a stub that used to build up a suite of integration tests, to define and
+ *  enforce contracts before the underlying functionality was written
+ * 
+ */
 @RestController
 @RequestMapping("/stub")
 public class StubbedPersonController {
@@ -38,7 +44,7 @@ public class StubbedPersonController {
     public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto person) {
         int id = generateId();
         person.setId(Optional.of(Integer.valueOf(id).toString()));
-        singleton.put(id,person);
+        singleton.put(id, person);
         //TODO return id
         return new ResponseEntity<>(singleton.get(id), HttpStatus.CREATED);
 
@@ -63,17 +69,17 @@ public class StubbedPersonController {
         //TODO what non-existent entities
 
         Integer idNumber = Integer.valueOf(id);
-        if(singleton.containsKey(idNumber)) {
+        if (singleton.containsKey(idNumber)) {
 
 
             PersonDto originial = singleton.get(idNumber);
-            if(!originial.getFirstName().equals(personDto.getFirstName())) {
+            if (!originial.getFirstName().equals(personDto.getFirstName())) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
             }
-            if(!originial.getLastName().equals(personDto.getLastName())) {
+            if (!originial.getLastName().equals(personDto.getLastName())) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
             }
-            if(!originial.getDateOfBirth().equals(personDto.getDateOfBirth())) {
+            if (!originial.getDateOfBirth().equals(personDto.getDateOfBirth())) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
             }
 
@@ -93,8 +99,6 @@ public class StubbedPersonController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
 
 
 }
