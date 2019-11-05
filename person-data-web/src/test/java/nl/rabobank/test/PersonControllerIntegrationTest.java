@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = IntegrationTestConfiguration.class, properties = {"spring.jpa.hibernate.ddl-auto=create-drop"})
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class PersonControllerIT {
+public class PersonControllerIntegrationTest {
 
     @Autowired
     private MockMvc mvc;
@@ -30,14 +30,6 @@ public class PersonControllerIT {
     @BeforeEach
     void setUpClient() {
         client = new PersonServiceRestClient(mvc);
-    }
-
-    //TODO remove this test
-    @Test
-    public void getHello() throws Exception {
-        mvc.perform(get("/stub/").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("Greetings from Spring Boot!\n")));
     }
 
     @Test
