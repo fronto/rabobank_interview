@@ -1,7 +1,6 @@
 package nl.rabobank.test;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = IntegrationTestConfiguration.class, properties = { "spring.jpa.hibernate.ddl-auto=create-drop" })
+@SpringBootTest(classes = IntegrationTestConfiguration.class, properties = {"spring.jpa.hibernate.ddl-auto=create-drop"})
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class PersonControllerIT {
@@ -78,6 +77,20 @@ public class PersonControllerIT {
                 .andExpect(jsonPath("lastName", is("Lane")))
                 .andExpect(jsonPath("dateOfBirth", is("20/03/1984")))
                 .andExpect(jsonPath("address", is("17 Kew Drive, Borrowdale, Harare, 2345WP")));
+
+    }
+
+    @Test
+    void retrieveAllPeople() throws Exception {
+
+        client.createPerson(tracy());
+        client.createPerson(paul());
+
+        mvc.perform(get("/person/"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("[?(@.firstName == 'Tracy')]", notNullValue()))
+                .andExpect(jsonPath("[?(@.firstName == 'Paul')]", notNullValue()));
 
     }
 
@@ -179,6 +192,14 @@ public class PersonControllerIT {
                 .withLastName("Lane")
                 .withDateOfBirth("20/03/1984")
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+    }
+
+    private PersonJsonBuilder paul() {
+        return PersonJsonBuilder.aPerson()
+                .withFirstName("Paul")
+                .withLastName("Schwartz")
+                .withDateOfBirth("20/04/1983")
+                .withAddress("12 Fisher Avenue, Borrowdale, Harare, 1036EG");
     }
 
     private String personById(String id) {

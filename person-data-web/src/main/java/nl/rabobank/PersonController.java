@@ -9,7 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 public class PersonController {
@@ -21,7 +25,6 @@ public class PersonController {
     private PersonRepository personRepository;
 
     @PostMapping(path = "/person", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto personDto) {
 
         Person person = parseDomainObjectFromDto(personDto);
@@ -34,7 +37,7 @@ public class PersonController {
 
     }
 
-    private PersonDto serializeToDto(Person withId) {
+    private static PersonDto serializeToDto(Person withId) {
         PersonDto personDto = new PersonDto();
         personDto.setId(Optional.of(withId.getId().toString()));
         personDto.setFirstName(withId.getFirstName());
@@ -52,9 +55,16 @@ public class PersonController {
         return new Person(id, personDto.getFirstName(), personDto.getLastName(), personDto.getDateOfBirth(), personDto.getAddress());
     }
 
+    @GetMapping("/person/")
+    public ResponseEntity<List<PersonDto>> index() {
+
+        List<PersonDto> people = personRepository.findAll().stream().map(PersonController::serializeToDto).collect(toList());
+
+        return new ResponseEntity<>(people, HttpStatus.OK);
+
+    }
 
     @GetMapping("/person/{id}/")
-    @ResponseBody
     public ResponseEntity<PersonDto> getPerson(@PathVariable String id) {
 
         Person person = personRepository.getOne(Long.valueOf(id));
