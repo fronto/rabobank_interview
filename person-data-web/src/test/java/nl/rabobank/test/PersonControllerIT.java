@@ -12,6 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -91,6 +92,51 @@ public class PersonControllerIT {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("[?(@.firstName == 'Tracy')]", notNullValue()))
                 .andExpect(jsonPath("[?(@.firstName == 'Paul')]", notNullValue()));
+
+    }
+
+    @Test
+    void retrieveByFirstName() throws Exception {
+
+        client.createPerson(tracy());
+        client.createPerson(paul());
+
+        mvc.perform(get("/person/").param("firstName", "Paul"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("[?(@.firstName == 'Paul')]", notNullValue()))
+                .andExpect(jsonPath("[*]", hasSize(equalTo(1))));
+
+    }
+
+    @Test
+    void retrieveByLastName() throws Exception {
+
+        client.createPerson(tracy());
+        client.createPerson(paul().withLastName("Schwartz"));
+
+        mvc.perform(get("/person/").param("lastName", "Schwartz"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("[?(@.lastName == 'Schwartz')]", notNullValue()))
+                .andExpect(jsonPath("[*]", hasSize(equalTo(1))));
+
+    }
+
+    @Test
+    void retrieveByFirstAndLastName() throws Exception {
+
+        client.createPerson(tracy());
+        client.createPerson(paul().withLastName("Schwartz"));
+
+        mvc.perform(get("/person/")
+                .param("firstName", "Paul")
+                .param("lastName", "Schwartz"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("[?(@.firstName == 'Paul')]", notNullValue()))
+                .andExpect(jsonPath("[?(@.lastName == 'Schwartz')]", notNullValue()))
+                .andExpect(jsonPath("[*]", hasSize(equalTo(1))));
 
     }
 

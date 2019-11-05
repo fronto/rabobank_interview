@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -56,9 +58,10 @@ public class PersonController {
     }
 
     @GetMapping("/person/")
-    public ResponseEntity<List<PersonDto>> index() {
+    public ResponseEntity<List<PersonDto>> index(@RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName) {
 
-        List<PersonDto> people = personRepository.findAll().stream().map(PersonController::serializeToDto).collect(toList());
+        List<Person> result = personRepository.lookUpPeople(ofNullable(firstName), ofNullable(lastName));
+        List<PersonDto> people = result.stream().map(PersonController::serializeToDto).collect(toList());
 
         return new ResponseEntity<>(people, HttpStatus.OK);
 
