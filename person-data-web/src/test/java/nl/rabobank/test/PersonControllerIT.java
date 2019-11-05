@@ -154,7 +154,6 @@ public class PersonControllerIT {
 
     }
 
-    @Disabled
     @Test
     void deletePerson() throws Exception {
 

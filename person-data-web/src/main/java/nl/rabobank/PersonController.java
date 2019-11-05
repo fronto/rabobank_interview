@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Access;
 import java.util.Optional;
 
 @RestController
@@ -90,7 +89,9 @@ public class PersonController {
 
     @DeleteMapping("/person/{id}/")
     public ResponseEntity<Void> deletePerson(@PathVariable String id) {
-        throw new UnsupportedOperationException("not implemented yet");
+        Long idNumber = Long.valueOf(id);
+        personRepository.deleteById(idNumber);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
