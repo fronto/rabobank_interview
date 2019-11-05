@@ -17,8 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-//TODO what about @ExtendWith(SpringExtension.class)
-//TODO what about @SpringBootTest(classes = JpaH2TestConfiguration.class)
 @DataJpaTest
 @ContextConfiguration(classes = JpaH2TestConfiguration.class)
 public class PersonPersistenceTest {
@@ -26,7 +24,6 @@ public class PersonPersistenceTest {
     @Autowired
     PersonRepository personRepository;
 
-    //TODO duplication ???
     static final Person PAUL_SCHWARTZ = new Person("Paul", "Schwartz", localDate("20/04/1983"), "12 Fisher Avenue, Borrowdale, Harare, 1036EG");
     static final Person MARK_SCHWARTZ = new Person("Natalie", "Schwartz", localDate("10/06/1982"), "12 Fisher Avenue, Borrowdale, Harare, 1036EG");
     static final Person PAUL_MASON = new Person("Paul", "Mason", localDate("21/10/1988"), "12 Crowhill Road, Borrowdale, Harare, 1036EG");
@@ -60,7 +57,6 @@ public class PersonPersistenceTest {
 
     }
 
-    //TODO duplication
     Condition<Person> anId() {
         return new Condition<>(person -> person.getId() != null, "id must not be null");
     }

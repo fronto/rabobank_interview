@@ -45,7 +45,6 @@ public class StubbedPersonController {
         int id = generateId();
         person.setId(Optional.of(Integer.valueOf(id).toString()));
         singleton.put(id, person);
-        //TODO return id
         return new ResponseEntity<>(singleton.get(id), HttpStatus.CREATED);
 
     }
@@ -53,7 +52,6 @@ public class StubbedPersonController {
     @GetMapping("/person/{id}/")
     @ResponseBody
     public ResponseEntity<PersonDto> getPerson(@PathVariable String id) {
-        //TODO what about non-existent entities
         Integer idNumber = Integer.valueOf(id);
         if (singleton.containsKey(idNumber)) {
             PersonDto personDto = singleton.get(idNumber);
@@ -66,21 +64,21 @@ public class StubbedPersonController {
     @PutMapping("/person/{id}/")
     public ResponseEntity<PersonDto> modifyPerson(@RequestBody PersonDto personDto, @PathVariable String id) {
         //TODO what about null fields on DTO
-        //TODO what non-existent entities
 
         Integer idNumber = Integer.valueOf(id);
         if (singleton.containsKey(idNumber)) {
 
 
             PersonDto originial = singleton.get(idNumber);
+            //TODO consider providing user with feeback
             if (!originial.getFirstName().equals(personDto.getFirstName())) {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
             if (!originial.getLastName().equals(personDto.getLastName())) {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
             if (!originial.getDateOfBirth().equals(personDto.getDateOfBirth())) {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
             singleton.put(idNumber, personDto);

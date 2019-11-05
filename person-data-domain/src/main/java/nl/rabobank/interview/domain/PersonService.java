@@ -11,7 +11,6 @@ public class PersonService {
 
     private final PersonRepository personRepository;
 
-    //TODO think more deeply about transaction demarcation
     @Transactional
     public Person createNewPerson(Person person) {
 

@@ -83,14 +83,15 @@ public class PersonController {
         Person original = personRepository.getOne(idNumber);
         Person modified = parseDomainObjectFromDto(idNumber, personDto);
 
+        //TODO consider sending feedback to user when validation fails
         if(!original.getFirstName().equals(modified.getFirstName())) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         if(!original.getLastName().equals(modified.getLastName())) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         if(!original.getDateOfBirth().equals(modified.getDateOfBirth())) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);//TODO give the user an explanation
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
         Person result = personRepository.save(modified);

@@ -16,7 +16,6 @@ import javax.persistence.EntityManager;
 @EntityScan(basePackages = "nl.rabobank.interview.domain")
 public class JpaH2TestConfiguration {
 
-    //TODO duplicated factory method
     @Bean
     @Autowired
     PersonRepository personRepository(EntityManager entityManager) {
