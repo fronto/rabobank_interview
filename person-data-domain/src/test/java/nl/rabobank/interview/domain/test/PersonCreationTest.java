@@ -41,7 +41,7 @@ public class PersonCreationTest {
 
         personService.createNewPerson(PAUL_SCHWARTZ);
 
-        verify(personRepository).savePerson(PAUL_SCHWARTZ);
+        verify(personRepository).save(PAUL_SCHWARTZ);
 
     }
 
@@ -65,7 +65,7 @@ public class PersonCreationTest {
         Assertions.assertNull(withoutId.getId(), "Precondition violated: id field must be null");
         return repository -> {
             Person person = new Person(1234L, withoutId.getFirstName(), withoutId.getLastName(), withoutId.getDateOfBirth(), withoutId.getAddress());
-            when(repository.savePerson(withoutId)).thenReturn(person);
+            when(repository.save(withoutId)).thenReturn(person);
         };
     }
 

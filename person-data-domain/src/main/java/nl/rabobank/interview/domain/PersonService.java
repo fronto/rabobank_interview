@@ -19,7 +19,7 @@ public class PersonService {
             throw new IllegalStateException("Attempting to overwrite existing person");
         }
 
-        return personRepository.savePerson(person);
+        return personRepository.save(person);
 
     }
 

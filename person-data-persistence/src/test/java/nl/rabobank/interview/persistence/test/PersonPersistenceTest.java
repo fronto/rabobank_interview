@@ -42,7 +42,7 @@ public class PersonPersistenceTest {
     @Test
     void canPersistPerson() {
 
-        personRepository.savePerson(PAUL_SCHWARTZ);
+        personRepository.save(PAUL_SCHWARTZ);
         assertEquals(PAUL_SCHWARTZ, personRepository.findAll().get(0));
 
 
@@ -54,7 +54,7 @@ public class PersonPersistenceTest {
         //pre-condition
         assertNull(PAUL_SCHWARTZ.getId());
 
-        Person result = personRepository.savePerson(PAUL_SCHWARTZ);
+        Person result = personRepository.save(PAUL_SCHWARTZ);
 
         assertThat(result).isEqualTo(PAUL_SCHWARTZ).has(anId());
 
@@ -68,7 +68,7 @@ public class PersonPersistenceTest {
     @Test
     void canCheckForPresenceOfPerson() {
 
-        personRepository.savePerson(PAUL_SCHWARTZ);
+        personRepository.save(PAUL_SCHWARTZ);
         assertTrue(personRepository.hasPerson(PAUL_SCHWARTZ.getFirstName(), PAUL_SCHWARTZ.getLastName()));
 
     }

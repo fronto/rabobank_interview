@@ -9,8 +9,6 @@ import java.util.Optional;
 @NoRepositoryBean
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    Person savePerson(Person person);
-
     boolean hasPerson(String firstName, String lastName);
 
     List<Person> lookUpPeople(Optional<String> firstName, Optional<String> lastName);

@@ -13,7 +13,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class HibernatePersonRepository extends SimpleJpaRepository<Person, Long> implements PersonRepository {
@@ -28,10 +27,6 @@ public class HibernatePersonRepository extends SimpleJpaRepository<Person, Long>
     public HibernatePersonRepository(Class<Person> domainClass, EntityManager entityManager) {
         super(domainClass, entityManager);
         this.entityManager = entityManager;
-    }
-
-    public Person savePerson(Person person) {
-        return super.save(person);//TODO consider inlining
     }
 
     public boolean hasPerson(String firstName, String lastName) {
