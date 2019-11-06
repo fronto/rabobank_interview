@@ -12,8 +12,6 @@ JAR_NAME=person-data-web-1.0-SNAPSHOT.jar
 cp "../target/${JAR_NAME}" work_area
 cp Dockerfile work_area
 
-docker-compose -f docker-compose.yml build
-
 function getMyIP() {
     local _ip _line
     while IFS=$': \t' read -a _line ;do
@@ -29,4 +27,6 @@ export DATABASE_URL="jdbc:h2:tcp://${IP_ADDRESS}:1521/test"
 export DATABASE_USERNAME=sa
 export DATABASE_PASSWORD=
 
+docker-compose -f docker-compose.yml down --rmi local
+docker-compose -f docker-compose.yml build
 docker-compose -f docker-compose.yml up -d
