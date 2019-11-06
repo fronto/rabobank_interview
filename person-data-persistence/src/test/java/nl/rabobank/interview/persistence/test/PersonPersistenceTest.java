@@ -2,6 +2,7 @@ package nl.rabobank.interview.persistence.test;
 
 import nl.rabobank.interview.domain.Person;
 import nl.rabobank.interview.domain.PersonRepository;
+import nl.rabobank.interview.persistence.JpaHibernateConfiguration;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @DataJpaTest
-@ContextConfiguration(classes = JpaH2TestConfiguration.class)
+@ContextConfiguration(classes = JpaHibernateConfiguration.class)
 public class PersonPersistenceTest {
 
     @Autowired

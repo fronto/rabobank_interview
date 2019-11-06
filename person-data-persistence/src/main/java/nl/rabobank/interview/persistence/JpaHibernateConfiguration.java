@@ -1,20 +1,19 @@
-package nl.rabobank.interview.persistence.test;
+package nl.rabobank.interview.persistence;
 
 import nl.rabobank.interview.domain.Person;
 import nl.rabobank.interview.domain.PersonRepository;
-import nl.rabobank.interview.persistence.HibernatePersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.persistence.EntityManager;
 
-@SpringBootApplication
+@Configuration
 @EnableJpaRepositories
 @EntityScan(basePackages = "nl.rabobank.interview.domain")
-public class JpaH2TestConfiguration {
+public class JpaHibernateConfiguration {
 
     @Bean
     @Autowired
