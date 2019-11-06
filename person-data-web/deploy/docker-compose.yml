@@ -1,0 +1,21 @@
+version: '3'
+services:
+  person-data-app:
+    build: ./work_area
+    ports:
+      - "8080:8080"
+    environment:
+    - DATABASE_URL=${DATABASE_URL}
+    - DATABASE_USERNAME=sa
+    - DATABASE_PASSWORD=
+    depends_on:
+      - h2
+  h2:
+    image: oscarfonts/h2:1.4.199
+    ports:
+      - "1521:1521"
+      - "81:81"
+    environment:
+      - H2_OPTIONS=-ifNotExists
+    volumes:
+      - ${PWD}/data:/opt/h2-data
