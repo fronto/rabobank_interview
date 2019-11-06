@@ -2,9 +2,9 @@
 
 JAR_FILE_NAME='person-data-web-1.0-SNAPSHOT.jar'
 
-DATABASE_URL=jdbc:h2:mem:memorydb
+DATABASE_URL=jdbc:h2:tcp://localhost:1521/test
 DATABASE_USERNAME=sa
-DATABASE_PASSWORD=password
+DATABASE_PASSWORD=
 
 java \
  -Dspring.datasource.url=${DATABASE_URL} \
