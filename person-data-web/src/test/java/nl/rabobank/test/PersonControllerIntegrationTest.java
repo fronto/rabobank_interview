@@ -10,9 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -41,7 +43,7 @@ public class PersonControllerIntegrationTest {
                 .withDateOfBirth("20/03/1984")
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
 
-        mvc.perform(post("/person").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/person/").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .content(tracy.toJson()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("id", notNullValue()))
@@ -133,7 +135,7 @@ public class PersonControllerIntegrationTest {
     }
 
     @Test
-    void canModifyAddress() throws Exception {
+    void administratorCanModifyAddress() throws Exception {
 
         PersonJsonBuilder tracy = tracy()
                 .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
@@ -143,7 +145,9 @@ public class PersonControllerIntegrationTest {
         //change address
         tracy.withAddress("18 Fisher Avenue, Borrowdale, Harare, 2345WP");
 
-        mvc.perform(put(personById(id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put(personById(id))
+                .with(administratorCredentials())
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .content(tracy.toJson()))
                 .andExpect(status().isOk());
 
@@ -155,7 +159,25 @@ public class PersonControllerIntegrationTest {
     }
 
     @Test
-    void cannotModifyFirstName() throws Exception {
+    void nonAdministratorCannotModifyAddress() throws Exception {
+
+        PersonJsonBuilder tracy = tracy()
+                .withAddress("17 Kew Drive, Borrowdale, Harare, 2345WP");
+
+        String id = client.createPerson(tracy);
+
+        //change address
+        tracy.withAddress("18 Fisher Avenue, Borrowdale, Harare, 2345WP");
+
+        mvc.perform(put(personById(id))
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                .content(tracy.toJson()))
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    @Test
+    void evenAdminCannotModifyFirstName() throws Exception {
 
         PersonJsonBuilder tracy = tracy()
                 .withFirstName("Tracy");
@@ -165,14 +187,16 @@ public class PersonControllerIntegrationTest {
         //change firstName
         tracy.withFirstName("Hilda");
 
-        mvc.perform(put(personById(id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put(personById(id))
+                .with(administratorCredentials())
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .content(tracy.toJson()))
                 .andExpect(status().isForbidden());
 
     }
 
     @Test
-    void cannotModifyLastName() throws Exception {
+    void evenAdminCannotModifyLastName() throws Exception {
 
         PersonJsonBuilder tracy = tracy()
                 .withLastName("Lane");
@@ -182,14 +206,16 @@ public class PersonControllerIntegrationTest {
         //change lastName
         tracy.withLastName("Schwartz");
 
-        mvc.perform(put(personById(id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put(personById(id))
+                .with(administratorCredentials())
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .content(tracy.toJson()))
                 .andExpect(status().isForbidden());
 
     }
 
     @Test
-    void cannotModifyDateOfBirth() throws Exception {
+    void evenAdminCannotModifyDateOfBirth() throws Exception {
 
         PersonJsonBuilder tracy = tracy()
                 .withDateOfBirth("20/03/1984");
@@ -199,10 +225,17 @@ public class PersonControllerIntegrationTest {
         //change dateOfBirth
         tracy.withDateOfBirth("21/11/1991");
 
-        mvc.perform(put(personById(id)).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+
+        mvc.perform(put(personById(id))
+                .with(administratorCredentials())
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .content(tracy.toJson()))
                 .andExpect(status().isForbidden());
 
+    }
+
+    private static RequestPostProcessor administratorCredentials() {
+        return httpBasic("admin", "T3st_P@55W0rd");
     }
 
     @Test

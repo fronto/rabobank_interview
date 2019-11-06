@@ -26,7 +26,7 @@ public class PersonController {
     @Autowired
     private PersonRepository personRepository;
 
-    @PostMapping(path = "/person", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/person/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto personDto) {
 
         Person person = parseDomainObjectFromDto(personDto);
