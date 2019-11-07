@@ -24,3 +24,12 @@ To run the application carry out the following steps:
 ...the application should now be running on port 8080 with the database running on port 1521. The http interface to the database
 is available on port 81
 
+**The following tooling versions were used to develop the application:**
+
+java version: "11.0.4" 2019-07-16 LTS
+
+Maven version: 3.6.2
+
+Docker version 19.03.4, build 9013bf5
+
+docker-compose version 1.24.1, build 4667896b
