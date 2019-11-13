@@ -1,11 +1,15 @@
 package nl.rabobank.interview.domain;
 
 import lombok.Getter;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,6 +25,9 @@ public class Person {
     private String lastName;
     private LocalDate dateOfBirth;
     private String address;
+    @OneToMany
+    @Cascade(CascadeType.ALL)
+    private List<Pet> pets;
 
     @SuppressWarnings("unused")
     Person() {
@@ -48,11 +55,21 @@ public class Person {
         return Objects.equals(firstName, person.firstName) &&
                 Objects.equals(lastName, person.lastName) &&
                 Objects.equals(dateOfBirth, person.dateOfBirth) &&
-                Objects.equals(address, person.address);
+                Objects.equals(address, person.address) &&
+                Objects.equals(pets, person.pets);
+    }
+
+    void addPet(Pet pet) {
+        pets.add(pet);
+        pet.addOwner(this);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, dateOfBirth, address);
+        return Objects.hash(firstName, lastName, dateOfBirth, address, pets);
+    }
+
+    public boolean hasPet(Pet pet) {
+        return pets.contains(pet);
     }
 }
