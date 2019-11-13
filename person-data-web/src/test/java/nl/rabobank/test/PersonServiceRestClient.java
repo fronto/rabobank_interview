@@ -28,10 +28,21 @@ class PersonServiceRestClient {
     }
 
 
+    String createPet(PetJsonBuilder pet) {
+        try {
+            MvcResult result = mockMvc.perform(post("/pet/").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                    .content(pet.toJson()))
+                    .andExpect(status().isCreated()).andReturn();
+            return obtainId(result);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private String obtainId(MvcResult result) {
         try {
             return JsonPath.parse(result.getResponse().getContentAsString()).read("id");
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

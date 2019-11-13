@@ -9,7 +9,7 @@ import java.util.Optional;
 @Setter
 public class PetDto {
 
-    private Optional<Long> id;
+    private Optional<String> id;
     private String name;
     private Integer age;
 

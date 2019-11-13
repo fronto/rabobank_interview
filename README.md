@@ -2,11 +2,11 @@
 
 I have completed all the "MUSTs" (M1-M5)
 
-I have completed all the "SHOULDs" (S1-S4), although I have not run the Pet REST api through integration tests (yet)
+I have completed all the "SHOULDs" (S1-S4)
 
 I have not yet attempted any of the "COULDs" although I can see that for C1 this requirement would involve a one-to-many association 
 from Person to Pet, and many-to-one association the other way. I can see that in the database this would warrant foreign keys
-and cascading deletes in the ORM. Representing the association in the REST api may invite the use of HATEOS for ease
+and perhaps cascading operations in the ORM. Representing the association in the REST api may invite the use of HATEOS for ease
 of navigation.
 
 For requirement C2 I would suggest a feature toggle

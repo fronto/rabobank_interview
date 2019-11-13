@@ -42,7 +42,7 @@ public class PetController {
 
     private static PetDto serializePetToDto(Pet newPet) {
         PetDto toReturn = new PetDto();
-        toReturn.setId(Optional.of(newPet.getId()));
+        toReturn.setId(Optional.of(newPet.getId().toString()));
         toReturn.setName(newPet.getName());
         toReturn.setAge(newPet.getAge());
         return toReturn;
@@ -65,7 +65,7 @@ public class PetController {
     }
 
     @PutMapping("/pet/{id}/")
-    public ResponseEntity<PetDto> modifyPet(@PathVariable String id, PetDto petDto) {
+    public ResponseEntity<PetDto> modifyPet(@PathVariable String id, @RequestBody PetDto petDto) {
 
         Pet modified = parsePetDto(petDto);
         Long idNumber = Long.valueOf(id);
