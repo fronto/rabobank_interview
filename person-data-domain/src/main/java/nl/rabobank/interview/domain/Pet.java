@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Getter
 @Entity
-public class Pet {
+public final class Pet {
 
     @Id
     @GeneratedValue

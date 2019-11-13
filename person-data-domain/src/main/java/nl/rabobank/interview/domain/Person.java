@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Entity
 @Getter
-public class Person {
+public final class Person {
 
     @Id
     @GeneratedValue
